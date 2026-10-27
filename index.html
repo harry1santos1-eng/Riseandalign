@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Rise and Align is a talent agency that places skilled employees with companies.">
+<title>Rise and Align</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout concept: left-weighted editorial page built around one idea.
+     Uneven bars rise and settle on a shared level line, the way a placed
+     team settles into the same standard. Hairlines and a single amber mark
+     carry the rest. */
+  :root {
+    --ground: #020304;
+    --surface: #0A0E12;
+    --ink: #EAF0F2;
+    --ink-soft: #9AA7AF;
+    --line: #19222A;
+    --accent: #9BEA8F;
+    --on-accent: #07110A;
+    --link: #9BEA8F;
+    color-scheme: dark;
+
+    --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  /* Deliberately a single dark look: every color comes from the tokens above. */
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    padding-block: 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  .wrap { max-width: 1120px; margin-inline: auto; }
+  a { color: var(--link); }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  p { margin: 0; }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--link);
+  }
+
+  /* Header */
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 32px;
+    padding-block: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 21px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .brand svg { width: 28px; height: 28px; flex: none; }
+  .brand .m-bar { fill: var(--ink); }
+  .brand .m-hot { fill: var(--accent); }
+  .nav { display: flex; flex-wrap: wrap; gap: 6px 26px; }
+  .nav a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    padding-block: 4px;
+    border-bottom: 2px solid transparent;
+  }
+  .nav a:hover { border-bottom-color: var(--accent); }
+
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 48px;
+    align-items: center;
+    padding-block: 64px 72px;
+  }
+  .hero h1 {
+    font-size: clamp(2.6rem, 6.4vw, 5rem);
+    font-weight: 800;
+    margin-block: 18px 22px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .lede { font-size: 1.15rem; color: var(--ink-soft); max-width: 34em; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 16px;
+    padding: 13px 22px;
+    text-decoration: none;
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .btn:hover { background: var(--ink); color: var(--ground); }
+  .btn.solid { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .btn.solid:hover { background: var(--ink); border-color: var(--ink); color: var(--ground); }
+
+  .level-art { width: 100%; height: auto; display: block; max-width: 100%; }
+  .level-art .bar { fill: var(--ink); opacity: 0.88; transform-box: fill-box; transform-origin: 50% 100%; animation: settle 1.7s cubic-bezier(.2, .8, .2, 1) both; }
+  .level-art .bar.hot { fill: var(--accent); opacity: 1; }
+  .level-art .base { stroke: var(--ink); stroke-width: 2; }
+  .level-art .level { stroke: var(--accent); stroke-width: 2.5; stroke-dasharray: 2 7; stroke-linecap: round; }
+  .level-art .vial { fill: var(--surface); stroke: var(--ink); stroke-width: 2; }
+  .level-art .bubble { fill: var(--accent); }
+  .level-art text { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; fill: var(--ink-soft); }
+  @keyframes settle {
+    from { transform: scaleY(var(--s, 0.6)); }
+    to { transform: scaleY(1); }
+  }
+
+  /* Sections */
+  .section { padding-block: 72px; border-top: 1px solid var(--line); }
+  .section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 24px 48px; margin-bottom: 40px; }
+  .section-head h2 { font-size: clamp(1.9rem, 3.8vw, 2.9rem); font-weight: 700; }
+  .section-head p { color: var(--ink-soft); max-width: 36em; align-self: end; }
+
+  .services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .service { border-top: 3px solid var(--ink); padding-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .service h3 { font-size: 1.45rem; font-weight: 700; }
+  .service p { color: var(--ink-soft); }
+  .service .tag { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--link); }
+
+  /* Process */
+  .tabs { display: inline-flex; border: 2px solid var(--ink); border-radius: 2px; margin-bottom: 32px; flex-wrap: wrap; }
+  .tab {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 20px;
+    background: transparent;
+    color: var(--ink);
+    border: 0;
+    cursor: pointer;
+  }
+  .tab[aria-selected="true"] { background: var(--ink); color: var(--ground); }
+  .tab:hover:not([aria-selected="true"]) { background: var(--surface); }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; counter-reset: step; }
+  .step { position: relative; padding: 22px 18px 0 0; border-top: 2px solid var(--line); counter-increment: step; }
+  .step::before {
+    content: "";
+    position: absolute;
+    top: -7px;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .step .n { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.1em; color: var(--link); }
+  .step .n::before { content: "Step " counter(step); }
+  .step h3 { font-size: 1.25rem; font-weight: 700; margin-block: 6px 8px; }
+  .step p { color: var(--ink-soft); font-size: 15.5px; }
+
+  /* Roles */
+  .roles { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 56px; }
+  .role { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: 4px 24px; padding-block: 20px; border-top: 1px solid var(--line); }
+  .role dt { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; }
+  .role dd { margin: 0; color: var(--ink-soft); }
+
+  /* Standard */
+  .standard { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; background: var(--surface); border: 1px solid var(--line); }
+  .standard > div { padding: 30px 28px; border-left: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+  .standard > div:first-child { border-left: 0; }
+  .standard h3 { font-size: 1.3rem; font-weight: 700; }
+  .standard p { color: var(--ink-soft); font-size: 15.5px; }
+
+  /* Contact */
+  .contact { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: end; }
+  .contact h2 { font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 800; }
+  .contact-card { background: var(--surface); color: var(--ink); border: 1px solid var(--line); padding: 28px; border-radius: 2px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .contact-card .eyebrow { color: var(--accent); }
+  .mail { font-family: var(--font-mono); font-size: 1.05rem; overflow-wrap: anywhere; user-select: all; }
+  .copy-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .copy-btn {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 10px 18px;
+    background: var(--accent);
+    color: var(--on-accent);
+    border: 0;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .copy-btn:hover { filter: brightness(1.08); }
+  .copied { font-family: var(--font-mono); font-size: 13px; color: var(--accent); }
+  .contact-card small { color: var(--ink-soft); font-size: 14px; }
+  .fb-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 10px 18px;
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    text-decoration: none;
+    border-radius: 2px;
+  }
+  .fb-btn:hover { background: var(--ink); color: var(--ground); }
+  .fb-btn svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
+
+  footer { border-top: 1px solid var(--line); padding-block: 28px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; color: var(--ink-soft); font-size: 14px; }
+
+  /* Tablet and phone */
+  @media (max-width: 920px) {
+    .hero { grid-template-columns: minmax(0, 1fr); padding-block: 44px 52px; }
+    .level-art { max-width: 520px; }
+    .section-head { grid-template-columns: minmax(0, 1fr); }
+    .services { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .steps { grid-template-columns: minmax(0, 1fr); }
+    .step { padding: 0 0 26px 30px; border-top: 0; border-left: 2px solid var(--line); }
+    .step::before { top: 3px; left: -7px; }
+    .roles { grid-template-columns: minmax(0, 1fr); }
+    .standard { grid-template-columns: minmax(0, 1fr); }
+    .standard > div { border-left: 0; border-top: 1px solid var(--line); }
+    .standard > div:first-child { border-top: 0; }
+    .contact { grid-template-columns: minmax(0, 1fr); }
+    .section { padding-block: 52px; }
+  }
+  @media (max-width: 520px) {
+    .role { grid-template-columns: minmax(0, 1fr); }
+    .nav { gap: 4px 18px; }
+    body { font-size: 16.5px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .level-art .bar { animation: none; }
+  }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top" aria-label="Rise and Align home">
+      <svg viewBox="0 0 28 28" aria-hidden="true" focusable="false">
+        <rect class="m-bar" x="2" y="10" width="6" height="16"></rect>
+        <rect class="m-bar" x="11" y="10" width="6" height="16"></rect>
+        <rect class="m-hot" x="20" y="10" width="6" height="16"></rect>
+        <rect class="m-hot" x="2" y="4" width="24" height="3"></rect>
+      </svg>
+      Rise and Align
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#services">Services</a>
+      <a href="#process">Process</a>
+      <a href="#roles">Roles</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Talent agency &middot; Recruitment and staffing</p>
+        <h1>People rise. <em>Teams align.</em></h1>
+        <p class="lede">Rise and Align places skilled employees with companies that need them, then checks in after day one to make sure the fit holds.</p>
+        <div class="cta-row">
+          <a class="btn solid" href="#contact">Hire talent</a>
+          <a class="btn" href="#contact">Find your next role</a>
+        </div>
+      </div>
+
+      <svg class="level-art" viewBox="0 0 480 380" role="img" aria-label="Nine bars of different heights rising to meet one shared level line">
+        <line class="level" x1="14" y1="96" x2="466" y2="96"></line>
+        <g>
+          <rect class="bar" style="--s:.42; animation-delay:.00s" x="22" y="96" width="38" height="244"></rect>
+          <rect class="bar" style="--s:.71; animation-delay:.08s" x="68" y="96" width="38" height="244"></rect>
+          <rect class="bar" style="--s:.55; animation-delay:.16s" x="114" y="96" width="38" height="244"></rect>
+          <rect class="bar" style="--s:.88; animation-delay:.24s" x="160" y="96" width="38" height="244"></rect>
+          <rect class="bar hot" style="--s:.34; animation-delay:.32s" x="206" y="96" width="38" height="244"></rect>
+          <rect class="bar" style="--s:.78; animation-delay:.40s" x="252" y="96" width="38" height="244"></rect>
+          <rect class="bar" style="--s:.5; animation-delay:.48s" x="298" y="96" width="38" height="244"></rect>
+          <rect class="bar" style="--s:.64; animation-delay:.56s" x="344" y="96" width="38" height="244"></rect>
+          <rect class="bar" style="--s:.4; animation-delay:.64s" x="390" y="96" width="38" height="244"></rect>
+        </g>
+        <line class="base" x1="14" y1="340" x2="466" y2="340"></line>
+        <rect class="vial" x="196" y="72" width="60" height="22" rx="11"></rect>
+        <circle class="bubble" cx="226" cy="83" r="7"></circle>
+        <text x="14" y="366">THE STANDARD</text>
+        <text x="466" y="366" text-anchor="end">ONE LEVEL</text>
+      </svg>
+    </section>
+
+    <section class="section" id="services">
+      <div class="section-head">
+        <h2>What we do</h2>
+        <p>We recruit on both sides of the table. Companies get people who fit the work. Candidates get roles that fit their goals.</p>
+      </div>
+      <div class="services">
+        <article class="service">
+          <span class="tag">Full-time</span>
+          <h3>Permanent placement</h3>
+          <p>Hires for roles you plan to keep. We run the search, screen candidates, and bring you only the people worth an interview.</p>
+        </article>
+        <article class="service">
+          <span class="tag">Fixed term</span>
+          <h3>Contract and project staffing</h3>
+          <p>Specialists for a quarter, a product launch, or a busy season. Onboarding is quick and the end date is agreed up front.</p>
+        </article>
+        <article class="service">
+          <span class="tag">Group hiring</span>
+          <h3>Team build-outs</h3>
+          <p>Opening an office or starting a department? We hire the whole group together so everyone starts with the same expectations.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="process">
+      <div class="section-head">
+        <h2>How a placement works</h2>
+        <p>Every placement follows the same five steps, whether you are the company hiring or the person being hired.</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Choose your side">
+        <button class="tab" role="tab" id="tab-company" aria-controls="panel-company" aria-selected="true" type="button">For companies</button>
+        <button class="tab" role="tab" id="tab-candidate" aria-controls="panel-candidate" aria-selected="false" tabindex="-1" type="button">For candidates</button>
+      </div>
+
+      <ol class="steps" id="panel-company" role="tabpanel" aria-labelledby="tab-company">
+        <li class="step"><span class="n"></span><h3>Brief</h3><p>We learn the role, the team, and what success looks like after 90 days.</p></li>
+        <li class="step"><span class="n"></span><h3>Shortlist</h3><p>You receive vetted profiles, each with a short note on why the person fits.</p></li>
+        <li class="step"><span class="n"></span><h3>Interview</h3><p>We schedule every round, prepare the candidate, and collect your feedback.</p></li>
+        <li class="step"><span class="n"></span><h3>Offer</h3><p>We handle references and negotiation so the offer lands cleanly.</p></li>
+        <li class="step"><span class="n"></span><h3>Check-in</h3><p>We follow up with both sides at 30, 60, and 90 days.</p></li>
+      </ol>
+
+      <ol class="steps" id="panel-candidate" role="tabpanel" aria-labelledby="tab-candidate" hidden>
+        <li class="step"><span class="n"></span><h3>Conversation</h3><p>Tell us what you do best and what you want your next role to look like.</p></li>
+        <li class="step"><span class="n"></span><h3>Match</h3><p>We put you forward only for roles that fit your skills and your goals.</p></li>
+        <li class="step"><span class="n"></span><h3>Prepare</h3><p>Interview coaching, plus a straight account of the team and the manager.</p></li>
+        <li class="step"><span class="n"></span><h3>Offer</h3><p>We help you weigh pay, scope, and room to grow before you decide.</p></li>
+        <li class="step"><span class="n"></span><h3>Settle in</h3><p>Check-ins at 30, 60, and 90 days, so small problems get raised early.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="roles">
+      <div class="section-head">
+        <h2>Roles we place</h2>
+        <p>Six areas where we know the work, the pay ranges, and the people who do it well.</p>
+      </div>
+      <dl class="roles">
+        <div class="role"><dt>Technology</dt><dd>Software engineers, product designers, data analysts, IT support</dd></div>
+        <div class="role"><dt>Finance</dt><dd>Accountants, financial analysts, payroll specialists, controllers</dd></div>
+        <div class="role"><dt>Operations</dt><dd>Operations managers, logistics coordinators, procurement, supply planning</dd></div>
+        <div class="role"><dt>Sales and marketing</dt><dd>Account executives, brand managers, content leads, growth marketers</dd></div>
+        <div class="role"><dt>People and HR</dt><dd>Recruiters, HR business partners, learning and development leads</dd></div>
+        <div class="role"><dt>Administration</dt><dd>Executive assistants, office managers, customer service leads</dd></div>
+      </dl>
+    </section>
+
+    <section class="section" aria-labelledby="standard-title">
+      <div class="section-head">
+        <h2 id="standard-title">Our standard</h2>
+        <p>Three rules we hold ourselves to on every search.</p>
+      </div>
+      <div class="standard">
+        <div><h3>We say when it is not a fit</h3><p>If a role or a candidate is wrong, you hear it from us early, before anyone spends weeks on it.</p></div>
+        <div><h3>We keep both sides informed</h3><p>Candidates and companies get clear updates after every step, including when the answer is no.</p></div>
+        <div><h3>We stay after the offer</h3><p>A placement is finished at 90 days, not at signing. Our check-ins are part of the service.</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="contact">
+        <div>
+          <p class="eyebrow">Get in touch</p>
+          <h2 style="margin-top:16px">Start with a conversation.</h2>
+          <p class="lede" style="margin-top:18px">Tell us about the role you need to fill, or the role you want to find. We reply within one working day.</p>
+        </div>
+        <div class="contact-card">
+          <span class="eyebrow">Email us</span>
+          <span class="mail" id="mail-address">riseandalign1995@gmail.com</span>
+          <div class="copy-row">
+            <button class="copy-btn" id="copy-btn" type="button">Copy address</button>
+            <span class="copied" id="copied" role="status" aria-live="polite"></span>
+          </div>
+          <small>Include the role title, location, and when you need to start.</small>
+          <a class="fb-btn" href="https://www.facebook.com/p/RISE-ALIGN-61594581363545/" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H8v3h2.4V21h3.1z"></path></svg>
+            Follow us on Facebook
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>&copy; 2026 Rise and Align</span>
+    <a href="https://www.facebook.com/p/RISE-ALIGN-61594581363545/" target="_blank" rel="noopener noreferrer">Facebook</a>
+  </footer>
+</div>
+
+<script>
+  (function () {
+    var tabs = [
+      { btn: document.getElementById('tab-company'), panel: document.getElementById('panel-company') },
+      { btn: document.getElementById('tab-candidate'), panel: document.getElementById('panel-candidate') }
+    ];
+    function select(i) {
+      tabs.forEach(function (t, j) {
+        var on = i === j;
+        t.btn.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.btn.tabIndex = on ? 0 : -1;
+        t.panel.hidden = !on;
+      });
+    }
+    tabs.forEach(function (t, i) {
+      t.btn.addEventListener('click', function () { select(i); });
+      t.btn.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          var next = (i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length;
+          select(next);
+          tabs[next].btn.focus();
+        }
+      });
+    });
+
+    var copyBtn = document.getElementById('copy-btn');
+    var copied = document.getElementById('copied');
+    var addr = document.getElementById('mail-address');
+    function selectText() {
+      var range = document.createRange();
+      range.selectNodeContents(addr);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    copyBtn.addEventListener('click', function () {
+      var text = addr.textContent.trim();
+      var done = function () { copied.textContent = 'Copied'; setTimeout(function () { copied.textContent = ''; }, 2000); };
+      var fail = function () { selectText(); copied.textContent = 'Press Ctrl+C to copy'; };
+      try {
+        navigator.clipboard.writeText(text).then(done, fail);
+      } catch (e) {
+        fail();
+      }
+    });
+  })();
+</script>
+</body>
+</html>
